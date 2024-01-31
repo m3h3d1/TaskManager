@@ -30,6 +30,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<?> nullPointer(NullPointerException exception) {
+        return new ResponseEntity<>(new ErrorResponse("NullPointerException", "Failed to process null value",
+                "Null pointer reference", "Null value could not be referenced", HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+
+    // Generic Exception
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> exceptionParent(Exception exception) {
+        return new ResponseEntity<>(new ErrorResponse("Exception", "Failed to perform operation",
+                "Uncaught error", "Unknown", HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     // Utility method to generate a custom response
     private ResponseEntity<?> generateResponse(CustomException exception, HttpStatus status) {
         return new ResponseEntity<>(new ErrorResponse(exception.getException(), exception.getMessage(),

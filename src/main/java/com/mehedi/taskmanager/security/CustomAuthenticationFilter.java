@@ -6,6 +6,7 @@ import com.mehedi.taskmanager.model.auths.LoginRequestDTO;
 import com.mehedi.taskmanager.model.auths.LoginResponseDTO;
 import com.mehedi.taskmanager.model.userdto.UserReadDTO;
 import com.mehedi.taskmanager.service.interfaces.UserService;
+import com.mehedi.taskmanager.utilities.constants.TokenConstants;
 import com.mehedi.taskmanager.utilities.token.JWTUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +33,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         setFilterProcessesUrl("/api/login");
     }
 
+    private final Map<String, Integer> attemptCount = new HashMap<String, Integer>();
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         LoginRequestDTO credentials = null;
@@ -40,6 +43,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         } catch (IOException e) {
             writeResponse(response, "Exception while reading credentials", 400);
         }
+
+        attemptCount.put(credentials.getUsername(), attemptCount.getOrDefault(credentials.getUsername(), 0) + 1);
         return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getUsername(),credentials.getPassword()));
@@ -51,6 +56,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String username = user.getUsername();
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
         UserReadDTO userReadDto = userService.readByUsername(username);
+
+        if (attemptCount.get(userReadDto.getUsername()) > TokenConstants.MAX_LOGIN_ATTEMPTS_LIMIT) {
+            restrictedResponse(response);
+            return;
+        } else {
+            attemptCount.put(userReadDto.getUsername(), 0);
+        }
 
         String userRole = userReadDto.getRole().getRoleName();
         List<String> userRoles = new ArrayList<>();
@@ -66,8 +78,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", "Username or Password wrong.");
+        errorResponse.put("message", "Username or Password wrong. Max failed attempt: "+TokenConstants.MAX_LOGIN_ATTEMPTS_LIMIT);
         writeResponse(response, errorResponse, 400);
+    }
+
+    private void restrictedResponse(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setContentType("application/json");
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("Restricted", "Your account has been locked for "+ TokenConstants.MAX_LOGIN_ATTEMPTS_LIMIT +" failed attempts.");
+        writeResponse(response, errorResponse, 403);
     }
 
     private void writeResponse(HttpServletResponse response, Object object, int statusCode){
