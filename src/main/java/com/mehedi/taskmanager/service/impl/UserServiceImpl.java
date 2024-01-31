@@ -9,7 +9,7 @@ import com.mehedi.taskmanager.exception.UserNotFoundException;
 import com.mehedi.taskmanager.model.userdto.UserCreateDTO;
 import com.mehedi.taskmanager.model.userdto.UserReadDTO;
 import com.mehedi.taskmanager.repository.UserRepository;
-import com.mehedi.taskmanager.service.interfaces.UserService;
+import com.mehedi.taskmanager.service.UserService;
 import com.mehedi.taskmanager.validation.UserValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

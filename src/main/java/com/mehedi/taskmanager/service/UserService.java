@@ -1,4 +1,4 @@
-package com.mehedi.taskmanager.service.interfaces;
+package com.mehedi.taskmanager.service;
 
 
 import com.mehedi.taskmanager.entity.User;

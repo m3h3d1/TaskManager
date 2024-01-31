@@ -1,7 +1,7 @@
 package com.mehedi.taskmanager.controller;
 
 import com.mehedi.taskmanager.model.userdto.UserCreateDTO;
-import com.mehedi.taskmanager.service.interfaces.UserService;
+import com.mehedi.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

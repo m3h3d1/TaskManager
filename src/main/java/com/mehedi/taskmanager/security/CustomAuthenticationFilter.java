@@ -5,7 +5,7 @@ import com.mehedi.taskmanager.config.SpringApplicationContext;
 import com.mehedi.taskmanager.model.auths.LoginRequestDTO;
 import com.mehedi.taskmanager.model.auths.LoginResponseDTO;
 import com.mehedi.taskmanager.model.userdto.UserReadDTO;
-import com.mehedi.taskmanager.service.interfaces.UserService;
+import com.mehedi.taskmanager.service.UserService;
 import com.mehedi.taskmanager.utilities.constants.TokenConstants;
 import com.mehedi.taskmanager.utilities.token.JWTUtils;
 import jakarta.servlet.FilterChain;
