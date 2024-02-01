@@ -7,6 +7,7 @@ import Header from "./components/common/header";
 import NotFoundPage from "./components/notFoundPage";
 import Authenticate from "./components/account/authenticate";
 import Footer from "./components/common/footer";
+import TasksPage from "./components/tasks/TasksPage";
 
 function App() {
   
@@ -17,6 +18,9 @@ function App() {
         <Route path="/" exact element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route element={<Authenticate requiredRole={"USER"} />} >
+          <Route path="/tasks" element={<TasksPage />} />
+        </Route>
         <Route element={<Authenticate requiredRole={"ANY"} />}>
           {/* <Route path="/users/:userId" element={<UserDetails />} /> */}
         </Route>

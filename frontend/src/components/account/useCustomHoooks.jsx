@@ -37,23 +37,29 @@ const UseCustomHooks = () => {
       .post("/api/login", data)
       .then((resp) => {
         console.log("The Response", resp);
-        console.log("Response from login ", data);
-        const token = resp.data.Authorization;
-        const userId = resp.data.userId;
-        const email = resp.data.email;
+
+        const token = resp.data.bearerToken;
+        const roles = resp.data.roles;
         const username = resp.data.username;
-        const role = resp.data.role;
+
         localStorage.setItem("token", token);
-        localStorage.setItem("userId", userId);
-        localStorage.setItem("email", email);
-        localStorage.setItem("role", role);
         localStorage.setItem("username", username);
+
+        
+        // Assuming roles has at least one element
+        const role = roles[0];
+        localStorage.setItem("role", role);
+
+        console.log("skdjhfs");
+        
+        console.log(localStorage);
+
         setIsRegistrationDone(true);
-        if(role=="ADMIN") {
+
+        if (role === "ADMIN") {
           navigate("/admin");
-        }
-        else {
-          navigate("/");
+        } else {
+          navigate("/tasks");
         }
       })
       .catch((error) => {

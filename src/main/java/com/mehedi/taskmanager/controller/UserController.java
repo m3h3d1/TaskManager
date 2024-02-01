@@ -1,6 +1,7 @@
 package com.mehedi.taskmanager.controller;
 
 import com.mehedi.taskmanager.model.userdto.UserCreateDTO;
+import com.mehedi.taskmanager.model.userdto.UserReadDTO;
 import com.mehedi.taskmanager.service.UserService;
 import com.mehedi.taskmanager.utilities.constants.APIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -34,5 +37,10 @@ public class UserController {
         userCreateDTO.setRole("ADMIN");
         userService.create(userCreateDTO);
         return new ResponseEntity<>("Account successfully registered", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/all")
+    public ResponseEntity<List<UserReadDTO>> getAllUser(){
+        return ResponseEntity.ok(userService.readAll());
     }
 }
