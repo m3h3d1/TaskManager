@@ -47,7 +47,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         attemptCount.put(credentials.getUsername(), attemptCount.getOrDefault(credentials.getUsername(), 0) + 1);
         return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            credentials.getUsername(),credentials.getPassword()));
+                            credentials.getUsername(), credentials.getPassword()));
     }
 
     @Override

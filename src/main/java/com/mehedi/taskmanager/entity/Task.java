@@ -31,7 +31,6 @@ public class Task {
     @Column(name = "status", nullable = false)
     private TaskStatus status;
 
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User assignedUser;

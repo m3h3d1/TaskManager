@@ -2,17 +2,14 @@ package com.mehedi.taskmanager.controller;
 
 import com.mehedi.taskmanager.model.userdto.UserCreateDTO;
 import com.mehedi.taskmanager.service.UserService;
+import com.mehedi.taskmanager.utilities.constants.APIConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -24,9 +21,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping(APIConstants.SIGN_UP)
     public ResponseEntity<?> register(@RequestBody UserCreateDTO userCreateDTO) {
         userCreateDTO.setRole("USER");
+        userService.create(userCreateDTO);
+        return new ResponseEntity<>("Account successfully registered", HttpStatus.CREATED);
+    }
+    @PostMapping(APIConstants.SIGN_UP_ADMIN)
+    public ResponseEntity<?> registerAsAdmin(@RequestBody UserCreateDTO userCreateDTO, @RequestParam String permissionToken) {
+        if(permissionToken == null || !permissionToken.equals("123456"))
+            return new ResponseEntity<>("Invalid permission token!", HttpStatus.BAD_REQUEST);
+        userCreateDTO.setRole("ADMIN");
         userService.create(userCreateDTO);
         return new ResponseEntity<>("Account successfully registered", HttpStatus.CREATED);
     }

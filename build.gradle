@@ -34,8 +34,13 @@ dependencies {
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	testImplementation 'junit:junit:4.13.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+test {
+    useJUnitPlatform()
+    include 'com/mehedi/taskmanager/service/UserServiceImplTest.class'
 }

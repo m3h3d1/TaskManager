@@ -2,6 +2,7 @@ package com.mehedi.taskmanager.service.impl;
 
 import com.mehedi.taskmanager.entity.Task;
 import com.mehedi.taskmanager.entity.User;
+import com.mehedi.taskmanager.exception.CustomException;
 import com.mehedi.taskmanager.exception.TaskNotFoundException;
 import com.mehedi.taskmanager.exception.UserNotFoundException;
 import com.mehedi.taskmanager.model.taskdto.TaskCreateDTO;
@@ -13,6 +14,7 @@ import com.mehedi.taskmanager.service.TaskService;
 import com.mehedi.taskmanager.utilities.enums.TaskStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,9 +71,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(UUID taskId, String username) {
-        Task existingTask = getTaskByIdAndUsername(taskId, username);
-
-        taskRepository.delete(existingTask);
+        try {
+            Task existingTask = getTaskByIdAndUsername(taskId, username);
+            taskRepository.delete(existingTask);
+        } catch (Exception e) {
+            throw new CustomException("TaskNotFoundException", "Failed to delete task",
+                    "Deleting task by ID", e.getMessage());
+        }
     }
 
     private Task getTaskByIdAndUsername(UUID taskId, String username) {
